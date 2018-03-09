@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Collapsible sidebar using Bootstrap 3</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800');
+    </style>
+    <script type="text/javascript" async
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+<body>
+
+
+<div class="wrapper">
+    <!-- Sidebar Holder -->
+    <nav id="sidebar" class="Left">
+        <div class="sidebar-header">
+            <h2 style="font-weight: 700">Neural Networks</h2>
+        </div>
+
+        <ul class="list-unstyled components">
+            <li class="active">
+                <a data-target="#homeSubmenu" data-toggle="collapse" aria-expanded="false">Discrete Hopfield
+                    Networks</a>
+                <ul class="collapse list-unstyled" id="homeSubmenu">
+                    <li><a href="#hopfield_history">Hopfield Network History</a></li>
+                    <li><a href="#hopfield_architecture">Hopfield Network Architecture</a></li>
+                    <li><a href="#running_a_hopfield_network">Running a Hopfield Network</a></li>
+                    <li><a href="#hopfield_training">Training a Hopfield Network</a></li>
+                    <li><a href="#energy_function_and_capacity">Energy Function and Capacity</a></li>
+                </ul>
+            </li>
+            <li class="active">
+                <a data-target="#homeSubmenu2" data-toggle="collapse" aria-expanded="false">Hopfield Implementation
+                    Examples</a>
+                <ul class="collapse list-unstyled" id="homeSubmenu2">
+                    <li><a href="#python">Python</a></li>
+                    <li><a href="#java">Java</a></li>
+                </ul>
+            </li>
+            <li class="active">
+                <a data-target="#homeSubmenu3" data-toggle="collapse" aria-expanded="false">Restricted Boltzmann
+                    Machines</a>
+                <ul class="collapse list-unstyled" id="homeSubmenu3">
+                    <li><a href="#boltzmann">Boltzmann</a></li>
+                    <li><a href="#rbm_history">RBM History</a></li>
+                    <li><a href="#rbm_architecture">RBM Architecture</a></li>
+                    <li><a href="#energy_functions_and_reconstructions">Energy Functions and Reconstructions</a></li>
+                    <li><a href="#contrastive_divergence">Contrastive Divergence</a></li>
+                </ul>
+            </li>
+        </ul>
+
+    </nav>
+
+
+    <!-- Page Content Holder -->
+    <div id="content" class="Middle">
+
+        <!--<nav class="navbar navbar-default">-->
+        <!--<div class="container-fluid">-->
+
+        <!--<div class="navbar-header">-->
+        <!--<button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">-->
+        <!--<i class="glyphicon glyphicon-align-left"></i>-->
+        <!--<span>Toggle Sidebar</span>-->
+        <!--</button>-->
+        <!--</div>-->
+
+        <!--<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">-->
+        <!--<ul class="nav navbar-nav navbar-right">-->
+        <!--<li><a href="#">Page</a></li>-->
+        <!--<li><a href="#">Page</a></li>-->
+        <!--<li><a href="#">Page</a></li>-->
+        <!--<li><a href="#">Page</a></li>-->
+        <!--</ul>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</nav>-->
+
+        <div id="hopfield_history">
+            <h2>Brief History</h2>
+            <p>
+                In 1949 Donald Hebb wrote a book entitled “The organization of behavior” which pursued the idea that
+                classical psychological conditioning is ubiquitous in animals because it is a property of individual
+                neurons. This idea was certainly not a new one, but Hebb took it a step further.
+            </p>
+            <p>
+                Donald Hebb hypothesised in 1949 about how neurons are connected with each other in the brain. “When an
+                axon
+                of cell A is near enough to excite a cell B and repeatedly or persistently takes part in firing it, some
+                growth
+                process or metabolic chance takes place in one or both cells such that A’s efficiency, as one of the
+                cells
+                firing B, is increased.
+            </p>
+            <blockquote class="blockquote">
+                <p class="mb-0">Neurons that fire together, wire together, Neurons that fire out of sync, fail to
+                    link</p>
+                <footer class="blockquote-footer"><cite title="Hebb">Hebb</cite></footer>
+            </blockquote>
+        </div>
+
+
+        <div id="hopfield_architecture">
+            <div class="line"></div>
+            <h2>Architecture</h2>
+            <p>There are 2 popular forms of the model for a Hopfield Network.</p>
+            <ol>
+                <li>Binary neurals with discrete time, updated 1 at a time</li>
+                <li>Graded neurons with continuous time</li>
+            </ol>
+            <p>
+                In both of these forms however, the hopfield network consists of a single layer which contains one or
+                more
+                fully connected recurrent neurons.
+            </p>
+            <figure>
+                <img class="figure-img img-fluid rounded"
+                     src="http://latex.codecogs.com/gif.latex?W%3D%20%20%20%20%20%20%20%20%20%20\begin{pmatrix}%200%20&%20w_{12}%20&%20...%20&%20w_{1i}%20&%20...%20&%20w_{1n}%20\\%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20w_{21}%20&%200%20&%20...%20&%20w_{2i}%20&%20...%20&%20w_{2n}%20\\%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20\vdots%20&%20\vdots%20&%20\ddots%20&%20\vdots%20&%20%20%20&%20\vdots%20\\%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20w_{i1}%20&%20w_{i2}%20&%20...%20&%200%20&%20...%20&%20w_{in}%20\\%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20\vdots%20&%20\vdots%20&%20%20%20&%20\vdots%20&%20\ddots%20&%20\vdots%20\\%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20w_{n1}%20&%20w_{n2}%20&%20...%20&%20w_{ni}%20&%20...%20&%200%20\\%20%20%20%20%20%20%20%20%20%20\end{pmatrix}"/>
+            </figure>
+            <p>
+                Weights between the nodes can be represented as a matrix. Where \(W_{ij}\) the weight between
+                the \(i^{th}\) node and the \(j^{th}\) node.
+                The matrix is symmetrical meaning \(W_{ij}\) = \(W_{ji}\)
+                Neurons do not connect to themselves meaning \(W_{ii} = 0.\)
+            </p>
+
+            <p>The input and output patterns can be described as discrete vectors, which can be either binary
+                (\(0\),\(1\))
+                or
+                bipolar (\(+1\),\(-1)\) in nature. In either case a neuron is either ON or OFF. Normally bipolar vectors
+                are
+                used.
+            </p>
+            <p>
+                Hopfield network is initially trained to store a number of patterns which we would conceive of as
+                memories.
+                The network is then able to recognise any of the learned patterns by exposure to a part of the pattern
+                or
+                even some corrupted information about that pattern.
+            </p>
+            <img class="figure-img img-fluid rounded"
+                 src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Hopfield-network.svg/2000px-Hopfield-network.svg.png"
+                 height="500" width="500"/>
+            <p>
+                The number of patterns a hopfield network is able to store is usually around \(0.18 * n\) where \(n\) is
+                the
+                number of neurons. The output of each neuron should be the input of other neurons but not the input of
+                self,
+                i.e
+                any neuron’s output should be calculated from the input of other neurons, but never from itself.
+                Connections
+                should be excitatory as well as inhibitory. It would be excitatory, if the output of the neuron
+                is the same as the input, otherwise inhibitory.
+            </p>
+
+        </div>
+
+        <div id="hopfield_training">
+            <div class="line"></div>
+            <h2>Training a Hopfield Network</h2>
+            <p>
+                There are many systems by which a Hopfield network can be trained but all are based on 1 core idea: the
+                changing of synaptic weights. In general this means that for a given input, the weight for two connected
+                nodes in the same state is increased, but the weight between connected nodes in opposite states is
+                decreased.
+            </p>
+            <p>
+                A learning rule will have two useful properties - being local and/or being incremental.
+                A rule is local if for every update only the information from the nodes whose weight is updated is used,
+                and
+                incremental if no information about previously learned patterns is required (to learn a new pattern?).
+            </p>
+            <p>
+                A third very important rule is the capacity, which is the number of patterns per neuron that the network
+                can
+                'remember'. The most commonly used learning rule for Hopfield networks is Hebbian learning, which was
+                devised by Donald Hebb in 1949. Hebbian learning is defined by the following formula:
+
+                $$W_{ij} = \frac{1}{N} \sum_{\mu = 1}^{p} \epsilon_{i}^{\mu} \epsilon_{j}^{\mu}$$
+            </p>
+            <p>
+                Therefore, Hebbian learning consists of setting the new weight between nodes \(i\) and \(j\) to the
+                average
+                product
+                of the states of these two nodes.
+            </p>
+            <p>
+                First we need a number of patterns to impress onto our network. Let’s say our network has \(n\) number
+                of
+                nodes,
+                and we have \(m\) different patterns. We can turn each pattern in a column vector where \(P_{1i}\)
+                represents the
+                state
+                of neuron \(i\) in pattern 1. \(P\) is our pattern matrix. If we want to calculate our Weight Matrix
+                (\(W\)) we simply perform the following calculation: $$W = PP^T - mI$$
+
+                \(W\) represents our weight matrix.
+                \(P\) represents our Pattern matrix.
+                \(P^T\) represents our Pattern matrix transpose.
+                \(I\) represents the identity matrix.
+                \(mI\) represents the identity matrix multiplied by the number of patterns we want to store.
+            </p>
+            <p>
+                We subtract \(mI\) to give us the rule of \(W_{ii}\ = 0\)
+
+                Traditionally we then divide W by the number of patterns to get a weight matrix with values ranging from
+                (\(-1\)
+                to \(1\)) if our nodes are bipolar.
+
+                Why does this work?
+
+                Imagine it like this:
+            </p>
+            <p>
+                \(W_{ij}\) represents the weight between node \(i\) and node \(j\). By performing this calculation is
+                mathematically
+                represented as $$W_{ij} = (kmP_{ki} \times P_{kj}) \over m$$
+                If we assume we only have 1 pattern, \(W_{ij} = P_{i} \times P_{j}\).
+            </p>
+            <p style="text-align: center">
+
+                If \(P_{i}\) and \(P_{j}\) are the same \(W_{ij} = 1 \). <br>
+                If \(P_{i}\) and \(P_{j}\) are different \(W_{ij} = -1 \)<br>
+            </p>
+            <p>
+                Now what this means is that our weight matrix when we only have 1 Pattern represents for \(W_{ij}\) that
+                node \(i\)
+                and
+                node \(j\) are either the same in this pattern or different. This follows closely the theory of neurons
+                that
+                Hebb talked about.
+            </p>
+            <p>
+                When we have multiple patterns we simply average the values from the different patterns. This also works
+                because now we won't necessarily get binary values but instead continuous values for our weight matrix.
+                This
+                time \(W_{ij}\) represents how often values are the same or different. If \(W_{ij}\) was close to 1 the
+                would mean
+                more
+                often than not, nodes \(i\) and \(j\) are the same, if \(W_{ij}\) was close to -1, that would mean more
+                often than not
+                the
+                values of nodes \(i\) and \(j\) were different. And if it equals 0 that means there's not really any
+                link between the
+                2.
+                This also means that the value of one node tells us nothing about the probably value of another node
+            </p>
+        </div>
+
+        <div id="running_a_hopfield_network">
+            <div class="line"></div>
+            <h2>Running a hopfield network</h2>
+            <h3>Synchronously</h3>
+            <p>
+                Once we have our weight matrix we can set our nodes to any value we want. Remember we can represent our
+                nodes as a column vector where \(X_{i}\) represents the excitation of the i^{th} node.
+
+                We want to update our nodes to a new value, preferably closer to one of our impressed patterns. This is
+                easy
+                to do synchronously.
+
+                Let \(X_{t}\) = the node vector at time t
+
+                $$X_{t} = W_{X_{t-1}}$$
+
+                And that's it. Actually that's not it. This might not and probably won't give X_{t} a bipolar value and
+                our nodes have to be bipolar in this model. Therefore we use a sign function which simply returns \(-1\)
+                if
+                negative (\(< 0\)) and \(1\) if positive (\(>= 0\)). (Use a function to return a value in the form we
+                want?)
+
+                $$X_t = sign(W_{X_{t-1}})$$
+
+
+                Why does this work?
+            </p>
+            <p>
+                We already know our weight matrix is full of continuous values from -1 to 1 representing how often
+                certain
+                nodes are the same or different.
+
+                (For an example, let’s follow?) Lets follow the calculation for a particular node \(i\). Since were
+                looking
+                at a particular node, we can forget a lot of the calculations. All we care about now is the \(i\)th row
+                of the
+                weight matrix \(W_i\) multiplied by the nodes. *Then the sign function
+            </p>
+            <p>
+                When we calculate the value for node \(i\) what's really happening is we’re multiplying the value of
+                each node
+                by the value that represents the connection between that node and node \(i\), summing them up then
+                working out
+                if the total value is negative or positive.
+            </p>
+            <p>
+                Let's say that the connection between 2 different nodes was close to 1. Aka if one node has a certain
+                value,
+                according the patterns the second node probably has the same value, if the weight was closer to -1 then
+                if
+                one node has a certain value, according to the patterns the second node probably has a different
+                patterns.
+            </p>
+            <p>
+                Let’s say we take node \(j\) during the calculation for the new value for node \(i\). We multiply the
+                value of node
+                \(j\), \(X_j\) by \(W_{ij}\) if \(W_{ij}\) is 1 or close to 1 then \(X_j = X_j + W_{ij}\) where as if
+                \(W_{ij}\) is
+                close to -1 \(X_j = W_{ij}-X_j\)
+                This makes sense, because now if \(W_{ij}\) was close to one then by adding \(X_{j}\) to the sum were
+                gonna make it
+                more
+                likely that \(X_i\) value is the same as \(X_j\) which is what the pattern says should happen, where as
+                if the
+                value
+                of \(W_{ij}\) is different then by adding \(-X_j\) to the sum we are gonna make \(X_i\) more likely to
+                be opposite to \(X_j\)
+                which again is perfect.
+            </p>
+            <p>
+
+                So essentially to calculate the value of \(X_i\) we go through each nodes value, use to weight matrix to
+                work out
+                the relationship between the 2 nodes \(i\) and \(j\), then add all the values to a sum, average them and
+                we should
+                get a value that represents what \(X_i\) most probably should be based on all the other nodes.
+
+            </p>
+            <p>
+                This actually gets very close to achieving the rule Hebb realised in animals - “neurons that fire
+                together
+                link, neurons that fire out of sync, fail to link”.
+            </p>
+
+        </div>
+        <div id="energy_function_and_capacity">
+            <div class="line"></div>
+            <h2>Energy function and Capacity</h2>
+            <p>
+                If we have a network with weights W and biases for any possible state of our nodes we can calculate an
+                energy function of the state: $$-\frac{1}{2} \sum_{i,j}w_{ij}s_{i}s_{j} - \sum_{i}\theta_{i}s_{i}$$
+            </p>
+            <p>
+                When we run our algorithm very every single stage we either cause the Energy function to stay the same
+                or to decrease. Therefore the task of of running the algorithm is like trying to find the minimum of
+                this energy function.These minimums represent the state of one of our training data. Sometimes due to
+                our training data we can end up with a local minimum that is not a training data but because our
+                algorithms wont increase the energy function we can’t escape and this leads to hallucinations.
+            </p>
+            <p>
+                For example for every pattern \(x\), \(-x\) is a hallucination, we don’t normally care about those as
+                the
+                pattern is just inverted. (A hallucination however will always be a pattern we have learned but inverted
+                so normally these are not considered?).
+            </p>
+            <p>
+                One restriction on a hopfield network is how many patterns we can store before it does not work anymore,
+                in general the number of patterns we can store is around \(0.14 \times n\) where \(n\) the number of
+                nodes in our hopfield network.
+            </p>
+        </div>
+        <div id="python"></div>
+        <div id="java"></div>
+        <div id="boltzmann">
+            <div class="line"></div>
+            <h2>Boltzmann</h2>
+            <p>A boltzmann machine is a stochastic, generative version of a hopfield network.
+
+                A Boltzman Machine is essentially what happens when we add extra hidden (in presentation define what we
+                mean by that) nodes into our network that aren’t visible and don’t represent the values of our data but
+                still are used to represent more complication connections between our visible nodes.
+
+                We did not specifically research Boltzman Machines as the Restricted form that we will discuss following
+                this is much more widely used, but they are mentioned here to help bridge the gap between Hopfield
+                networks as described above and the Restricted Boltzman machines we have looked at in more detail.
+
+                We won’t go into much more about BMs but they are the link between RBMs and Hopfield networks.
+            </p>
+        </div>
+        <div id="rbm_history">
+            <div class="line"></div>
+            <h2>History of RBM</h2>
+            <p>A Restricted Boltzman Machine (RBM) is simply , as the name may imply, a restricted version of a Boltzman
+                Machine.
+
+                What that means is we take a Boltzman Machine but add the restriction that the network must form a
+                bipartite graph, where visible nodes are only connected to hidden ones and vice versa.
+                RBMs have become more popular than Boltzman Machines because the types of learning rules that can be
+                used are much more efficient and effective.
+            </p>
+            <p>
+                What that means is we take a Boltzman Machine but add the restriction that the network must form a
+                bipartite graph, where visible nodes are only connected to hidden ones and vice versa.
+                RBMs have become more popular than Boltzman Machines because the types of learning rules that can be
+                used are much more efficient and effective.
+            </p>
+            <p>
+                Originally invented under the name “harmonium” by Paul Smolensky in 1986, RBMs were popularised by Geoff
+                Hinton and his collaborators after they invented faster learning algorithms for use by RBMs in the mid
+                2000’s, an RBM is an algorithm useful for dimensionality reduction, classification, regression,
+                collaborative filtering, feature learning and topic modelling.
+            </p>
+        </div>
+        <div id="rbm_architecture">
+            <div class="line"></div>
+            <h2>Architecture of RBMs</h2>
+            <img style="float: right; padding: 0px 15px" src="https://deeplearning4j.org/img/two_layer_RBM.png">
+            <p>
+                RBMs are shallow, two-layer neural nets that constitute the building blocks of deep-belief networks. The
+                first layer of the RBM is called the visible, or input, layer, and the second is the hidden layer.
+            </p>
+            <p>
+                There is no intra-layer communication – this is the restriction in a restricted Boltzmann machine. Each
+                node is a locus of computation that processes input, and begins by making stochastic decisions about
+                whether to transmit that input or not. (Stochastic means “randomly determined”, and in this case, the
+                coefficients that modify inputs are randomly initialized.)
+            </p>
+            <p>
+                Each visible node takes a low-level feature from an item in the dataset to be learned. E.g. a pixel in
+                an image.
+            </p>
+            <p>
+                At each hidden node, each input x is multiplied by its respective weight w. That is, a single input x
+                would have three weights here, making 12 weights altogether (4 input nodes x 3 hidden nodes).
+            </p>
+            <p>
+                Each hidden node receives the four inputs multiplied by their respective weights. The sum of those
+                products is added to a bias (which forces at least some activations to happen), and the result is passed
+                through the activation algorithm producing one output for each hidden node.
+                $$activation_f(w_1{} * x_1{}) + (w_2 * x_2) + … + bias) = output$$
+            </p>
+            <p>
+                Because inputs from all visible nodes are being passed to all hidden nodes, an RBM can be defined as a
+                symmetrical bipartite graph.
+            </p>
+            <img src="https://deeplearning4j.org/img/weighted_input_RBM.png">
+            <p>
+                If these two layers were part of a deeper neural network, the outputs of hidden layer no. 1 would be
+                passed as inputs to hidden layer no. 2, and from there through as many hidden layers as you like until
+                they reach a final classifying layer. (For simple feed-forward movements, the RBM nodes function as an
+                autoencoder and nothing more.)
+            </p>
+            <img src="https://deeplearning4j.org/img/multiple_inputs_RBM.png">
+            <p>
+                Important to note that RBMs have two biases: the hidden bias helps the RBM produce activations on a
+                forward pass of data, and the visible layers’ biases help the RBM learn the reconstructions on the
+                backward pass.
+            </p>
+        </div>
+        <div id="energy_functions_and_reconstructions">
+            <div class="line"></div>
+            <h2>Energy Functions and Reconstructions</h2>
+            <p>
+                $$E(v,h) = - \sum_{i \in visible} a_i v_i - \sum_{j \in visible} b_j h_j - \sum_{i,j} v_i h_j w_{ij}$$
+                Where \(a\) is the visible layers biases, \(b\) is the hidden layers biases.
+                \(V\) is the visible unit, \(h\) is the hidden unit.
+                \(w\) is the weighs between them.
+            </p>
+            <p>
+                RBMS can be used to reconstruct data by themselves. They do this by making several forward and backward
+                passes between the two layers. Forward pass works normally, In a backward pass the activations in the
+                hidden network become the inputs, multiplied by the same weights but added to new weights (visible layer
+                weights)
+            </p>
+            <img src="https://deeplearning4j.org/img/reconstruction_RBM.png">
+            <p>
+                Because the weights are randomly initialised the difference between the original data and the
+                reconstruction is often large. We can call this error (the reconstruction error) and is calculated as
+                the difference between the reconstructed data r and the original input. We use backpropagation of this
+                error against the RBM’s weights until an error minimum is reached. A forward pass makes predictions on
+                about node activations. A backward pass guesses the original data causing a certain set of node
+                activations.
+            </p>
+        </div>
+        <div id="contrastive_divergence">
+            <div class="line"></div>
+            <h2>Constrative Divergence</h2>
+            <p>
+            For an rbm if we wanted to use Stochastic gradient descent we end up getting an intractable problem. So
+            instead we estimate it by using contrastive divergence.
+            </p>
+            <p>
+            Contrastive divergence algorithms are referred to as "CD-k", where \(k\) is the number of steps to run block
+            Gibbs sampling for. We normally take \(k=1\) when dealing with RBMs. This is because the (single layer of)
+            hidden neurons cannot interact with each other at all and therefore only 1 step is needed to reach the
+            equilibrium for the hidden neurons given the state of the visible neurons, we can use values higher than 1
+            and things won't be made worse but it's just wasteful computation since we won't get much better results. In
+            simple terms, contrastive divergence is an implementation of approximate gradient descent. Its used to
+            calculate the gradient between weights and error (reconstruction error).
+            </p>
+        </div>
+    </div>
+    <nav id="right-sidebar" class="Right"></nav>
+</div>
+
+
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="easing.js"></script>
+<!-- Bootstrap Js CDN -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+    $(".collapse").collapse('show');
+    $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+        });
+
+    });
+
+    $(function () {
+        $('ul.collapse a').bind('click', function (event) {
+            var $anchor = $(this);
+            $('html, body, div.Middle').stop().animate({
+                scrollTop: $($anchor.attr('href')).offset().top
+            }, 1500, 'easeInOutExpo');
+            // $('html, body').stop().animate({
+            //     scrollTop: $($anchor.attr('href')).offset().top
+            // }, 1000);
+            event.preventDefault();
+        });
+    });
+</script>
+</body>
+</html>
