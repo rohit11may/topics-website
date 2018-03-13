@@ -9,8 +9,47 @@ body {
     background: #fafafa;
 }
 
+h1 {
+    font-weight: 800;
+    text-align: center;
+    width: 100%;
+    text-align-all: center;
+    font-size: 10vh;
+    color: white;
+    padding: 20vh 10vh 5vh 10vh;
+    margin-top: -20px;
+}
+
 h2 {
     font-weight: 600;
+}
+
+.name {
+    font-weight: 600;
+    color: white;
+    font-size: 200%;
+    text-align: center;
+}
+
+.leftName {
+    float: left;
+    padding-left: 15%;
+    padding-right: 10px;
+}
+
+.rightName {
+    float: right;
+    padding-left: 10px;
+    padding-right: 15%;
+}
+
+.landing_para{
+    color: white;
+    font-size: 3vh;
+    font-weight: 200;
+    text-align: center;
+    font-style: italic;
+    padding: 0 10vh 2vh 10vh;
 }
 
 img {
@@ -55,6 +94,10 @@ a, a:hover, a:focus {
     margin: 40px -20px 40px -30px;
 }
 
+.landing {
+    background: url("../images/background.png") repeat;
+    height: 100vh;
+}
 /* Scrollability */
 
 .Left::-webkit-scrollbar,
@@ -109,7 +152,7 @@ a, a:hover, a:focus {
 #right-sidebar {
     min-width: 250px;
     max-width: 250px;
-    background: #AAC9D7;
+    background: url("../images/right.png") repeat;
     color: #fff;
     transition: all 0.3s;
 }
@@ -127,7 +170,7 @@ a, a:hover, a:focus {
 
 #sidebar .sidebar-header {
     padding: 20px;
-    background: #25363E;
+    background: url("../images/header.png") repeat;
     text-align: right;
     font-weight: 800;
 }
@@ -199,15 +242,6 @@ ul.CTAs a {
     margin-bottom: 5px;
 }
 
-a.download {
-    background: #fff;
-    color: #7386D5;
-}
-
-a.article, a.article:hover {
-    background: #6d7fcc !important;
-    color: #fff !important;
-}
 
 
 
