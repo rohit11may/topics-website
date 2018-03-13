@@ -142,28 +142,28 @@ a, a:hover, a:focus {
 }
 
 #sidebar {
-    min-width: 400px;
-    max-width: 400px;
+    min-width: 30vw;
+    max-width: 30vw;
     background: #607D8B;
     color: #fff;
     transition: all 0.3s;
 }
 
 #right-sidebar {
-    min-width: 250px;
-    max-width: 250px;
+    min-width: 20vw;
+    max-width: 20vw;
     background: url("../images/right.png") repeat;
     color: #fff;
     transition: all 0.3s;
 }
 
 #sidebar.active {
-    margin-left: -400px;
+    margin-left: -30vw;
     position: fixed;
 }
 
 #right-sidebar.active {
-    margin-right: -250px;
+    margin-right: -25vw;
     position: fixed;
     overflow: hidden;
 }
